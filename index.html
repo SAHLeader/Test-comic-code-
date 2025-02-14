@@ -1,1 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض البيانات من الـ API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .list-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .entry-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            text-align: center;
+        }
+        .entry-card img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .entry-card a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>قائمة البيانات</h1>
+    <div class="list-container" id="list-container">
+        <!-- سيتم ملء البيانات هنا بواسطة JavaScript -->
+    </div>
 
+    <script>
+        // عنوان الـ API
+        const apiUrl = 'https://your-api-endpoint.com/api/list';  // استبدله بالرابط الفعلي
+
+        // جلب البيانات من الـ API
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const listContainer = document.getElementById('list-container');
+
+                // إذا كانت البيانات تحتوي على جدول من المدخلات
+                if (data.table && Array.isArray(data.table)) {
+                    data.table.forEach(entry => {
+                        // إنشاء بطاقة لعرض كل مدخل
+                        const card = document.createElement('div');
+                        card.classList.add('entry-card');
+                        
+                        // إضافة صورة، العنوان، المؤلف، ورابط
+                        card.innerHTML = `
+                            <img src="${entry.image}" alt="${entry.title}">
+                            <h3>${entry.title}</h3>
+                            <p><strong>المؤلف:</strong> ${entry.author}</p>
+                            <p><strong>الصفحات:</strong> ${entry.pages}</p>
+                            <p><a href="${entry.link}" target="_blank">رابط</a></p>
+                        `;
+                        // إضافة البطاقة إلى الحاوية
+                        listContainer.appendChild(card);
+                    });
+                } else {
+                    listContainer.innerHTML = "<p>لم يتم العثور على بيانات.</p>";
+                }
+            })
+            .catch(error => {
+                console.error('حدث خطأ أثناء جلب البيانات:', error);
+            });
+    </script>
+</body>
+</html>
